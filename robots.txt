@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ryoma103110969.github.io/futatabi-lp/sitemap.xml
