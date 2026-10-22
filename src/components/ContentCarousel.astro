@@ -1,0 +1,70 @@
+---
+interface Props { id: string; label: string; }
+const { id, label } = Astro.props;
+---
+<content-carousel data-label={label}>
+  <div class="carousel-toolbar">
+    <p class="carousel-hint">横にスワイプして見る</p>
+    <div class="carousel-controls" hidden>
+      <span class="carousel-position" aria-live="polite" aria-atomic="true"></span>
+      <button type="button" data-prev aria-label={`前の${label}へ`} aria-controls={id}><span aria-hidden="true">←</span></button>
+      <button type="button" data-next aria-label={`次の${label}へ`} aria-controls={id}><span aria-hidden="true">→</span></button>
+    </div>
+  </div>
+  <div class="content-track" id={id} tabindex="0" role="region" aria-roledescription="カルーセル" aria-label={label}>
+    <slot />
+  </div>
+</content-carousel>
+<script>
+  class ContentCarousel extends HTMLElement {
+    connectedCallback() {
+      const track = this.querySelector<HTMLElement>('.content-track')!;
+      const prev = this.querySelector<HTMLButtonElement>('[data-prev]')!;
+      const next = this.querySelector<HTMLButtonElement>('[data-next]')!;
+      const position = this.querySelector<HTMLElement>('.carousel-position')!;
+      const controls = this.querySelector<HTMLElement>('.carousel-controls')!;
+      const cards = () => [...track.children] as HTMLElement[];
+      const step = () => (cards()[1]?.offsetLeft ?? 0) - (cards()[0]?.offsetLeft ?? 0) || track.clientWidth;
+      const update = () => {
+        const end = track.scrollWidth - track.clientWidth;
+        prev.disabled = track.scrollLeft < 2;
+        next.disabled = track.scrollLeft >= end - 2;
+        controls.hidden = end < 2;
+        const index = Math.min(cards().length, Math.round(track.scrollLeft / step()) + 1);
+        position.textContent = `${index} / ${cards().length}`;
+      };
+      const move = (left: number) => track.scrollTo({ left, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      const abort = new AbortController(); this.cleanup = () => { abort.abort(); observer.disconnect(); };
+      const options = { signal: abort.signal };
+      prev.addEventListener('click', () => move(track.scrollLeft - step()), options);
+      next.addEventListener('click', () => move(track.scrollLeft + step()), options);
+      track.addEventListener('scroll', update, { ...options, passive: true });
+      track.addEventListener('keydown', event => {
+        if (event.target !== track) return;
+        const values: Record<string, number> = { ArrowLeft: track.scrollLeft - step(), ArrowRight: track.scrollLeft + step(), Home: 0, End: track.scrollWidth };
+        if (event.key in values) { event.preventDefault(); move(values[event.key]); }
+      }, options);
+      const observer = new ResizeObserver(update); observer.observe(track);
+      update();
+    }
+    cleanup?: () => void;
+    disconnectedCallback() { this.cleanup?.(); }
+  }
+  if (!customElements.get('content-carousel')) customElements.define('content-carousel', ContentCarousel);
+</script>
+<style is:global>
+  content-carousel { display: block; min-width: 0; }
+  .carousel-toolbar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; min-height:46px; }
+  .carousel-hint { font-size:12px; color:var(--muted); }
+  .carousel-controls { display:flex; align-items:center; gap:10px; }
+  .carousel-controls[hidden] { display:none; }
+  .carousel-position { font-size:12px; color:var(--muted); margin-right:8px; font-variant-numeric:tabular-nums; }
+  .carousel-controls button { display:grid; place-items:center; width:46px; height:46px; border:1px solid var(--border2); border-radius:50%; color:var(--ink); background:#fff; font-size:23px; }
+  .carousel-controls button:hover:not(:disabled) { color:#fff; background:var(--accent); border-color:var(--accent); }
+  .carousel-controls button:disabled { opacity:.3; cursor:default; }
+  .content-track { position:relative; display:grid; grid-auto-flow:column; grid-auto-columns:calc((100% - 48px) / 3.25); gap:24px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; scrollbar-width:thin; scrollbar-color:#c8cde1 transparent; padding:4px 2px 20px; scroll-padding-inline:2px; }
+  .content-track > * { min-width:0; scroll-snap-align:start; }
+  .content-track:focus-visible, .carousel-controls button:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+  @media(max-width:900px) { .content-track { grid-auto-columns:calc((100% - 24px) / 2.15); } }
+  @media(max-width:600px) { .content-track { grid-auto-columns:88%; gap:16px; } .carousel-toolbar { margin-bottom:14px; } }
+</style>

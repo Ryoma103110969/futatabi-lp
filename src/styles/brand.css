@@ -1,0 +1,33 @@
+:root {
+  --ink: #2b2420;
+  --ink2: #4a3f38;
+  --muted: #6e6055;
+  --accent: #b8492f;
+  --accent2: #963a24;
+  --coral: #e98a6a;
+  --sun: #f2b84b;
+  --sea: #2f6f73;
+  --sea-deep: #1f4d57;
+  --bg: #fbf6ee;
+  --bg2: #f3eadc;
+  --paper: #fffdf8;
+  --border: #e6dccd;
+  --border2: #d3c4af;
+  --radius: 14px;
+  --radius-lg: 28px;
+  --max: 1200px;
+  --shadow-md: 0 14px 30px -18px rgba(74, 48, 30, .35);
+  --shadow-lg: 0 30px 70px -30px rgba(74, 48, 30, .45);
+  --font-serif: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-sans: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  --font-script: "Cormorant Garamond", "Times New Roman", serif;
+}
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+:where([hidden]) { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

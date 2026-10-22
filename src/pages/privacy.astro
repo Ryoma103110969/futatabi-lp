@@ -1,0 +1,52 @@
+---
+import c from '../data/site.json';
+import { asset, absolute } from '../lib/paths';
+import '../styles/brand.css';
+import '../styles/home.css';
+const title=`プライバシーポリシー｜${c.companyName}`;
+const updated='2026年10月22日';
+const sections=[
+ {h:'取得する情報',p:['お名前、メールアドレス、LINEの表示名など、お申し込み・お問い合わせの際にご記入いただく情報','旅行の日程・行き先・同行者など、ムービー制作のためにご記入いただく情報','ムービー制作のためにお預かりする動画・写真・音声']},
+ {h:'利用目的',p:['お申し込み内容の確認、プランや納品日のご案内などのご連絡','ムービーの企画・編集・納品','お客様から掲載のご同意をいただいた場合に限り、完成したムービーを作品例として紹介すること','サービスの改善のための集計（個人を特定しない形で行います）']},
+ {h:'お預かりした動画・写真の取り扱い',p:['お預かりした動画・写真は、ムービー制作の目的以外には使用しません。','お預かりしたデータは、納品から30日後に削除します。','作品例としての掲載は、完成品をご確認いただき、掲載方法に合意いただいた場合に限ります。合意後も、ご連絡をいただければ掲載を取りやめます。']},
+ {h:'業務の委託',p:['編集作業の一部を、守秘義務契約を結んだ編集者に委託することがあります。その場合も、制作に必要な範囲に限って情報を共有します。','お申し込みの受付にはGoogleフォームを利用しています。']},
+ {h:'第三者への提供',p:['法令に基づく場合を除き、ご本人の同意なく個人情報を第三者に提供することはありません。']},
+ {h:'開示・訂正・削除のご請求',p:['ご自身の情報の開示・訂正・削除、作品例の掲載取りやめをご希望の場合は、下記のお問い合わせ先までご連絡ください。ご本人であることを確認したうえで、すみやかに対応します。']},
+ {h:'改定',p:['このポリシーは、必要に応じて改定することがあります。改定した場合は、このページでお知らせします。']},
+];
+---
+<!doctype html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="theme-color" content="#FBF6EE"/>
+ <title>{title}</title><meta name="description" content={`${c.companyName}の個人情報とお預かりする動画・写真の取り扱いについて。`}/>
+ {c.demoMode && <meta name="robots" content="noindex, nofollow"/>}
+ <link rel="canonical" href={absolute('/privacy/')}/><link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml"/>
+ <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+ <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Shippori+Mincho+B1:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+ <header class="site-header">
+  <div class="w nav-row">
+   <a href={asset('/')} class="brand" aria-label={`${c.companyName} トップへ`}><span class="brand-mark" aria-hidden="true"></span><span class="brand-word">{c.companyName}<small>{c.serviceName}</small></span></a>
+   <a class="button button-secondary nav-back" href={asset('/')}>トップへ戻る</a>
+  </div>
+ </header>
+ <main class="section policy">
+  <div class="w policy-body">
+   <p class="eyebrow">Privacy policy</p>
+   <h1>プライバシーポリシー</h1>
+   <p class="policy-lead">{c.companyName}（以下「当サービス」）は、お客様の個人情報と、ムービー制作のためにお預かりする動画・写真を、以下のとおり大切に取り扱います。</p>
+   {sections.map(s=><section><h2>{s.h}</h2><ul>{s.p.map(t=><li>{t}</li>)}</ul></section>)}
+   <section><h2>お問い合わせ先</h2><p>{c.companyName}　{c.cta.secondaryUrl ? <>LINE公式アカウント（<a href={c.cta.secondaryUrl}>友だち追加</a>）、または</> : null}<a href={c.cta.primaryUrl}>申込フォーム</a>のご要望欄からご連絡ください。</p></section>
+   <p class="policy-date">制定日：{updated}</p>
+  </div>
+ </main>
+ <footer class="site-footer">
+  <div class="w footer-row">
+   <div><p class="footer-brand">{c.companyName}</p><p>旅を、なんどでも。</p></div>
+   <small>© {new Date().getFullYear()} {c.companyName}</small>
+  </div>
+ </footer>
+</body></html>

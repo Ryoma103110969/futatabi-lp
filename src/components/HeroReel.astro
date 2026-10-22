@@ -1,0 +1,23 @@
+---
+import { asset } from '../lib/paths';
+// Visual mock of a delivered reel. Scenes cross-fade on a 16s loop; reduced motion shows the first scene only.
+const scenes=[
+ {image:'/scene-sea.svg',day:'DAY 1',place:'沖縄・瀬底ビーチ',line:'はじめての海、こわくなかったね'},
+ {image:'/scene-road.svg',day:'DAY 2',place:'やんばるへドライブ',line:'車の中で、ずっと歌ってた'},
+ {image:'/scene-night.svg',day:'DAY 2',place:'国際通りの夜',line:'パパと手をつないで'},
+ {image:'/scene-onsen.svg',day:'DAY 3',place:'帰り道',line:'また来ようね'}
+];
+---
+<div class="reel-stage" aria-label="納品されるムービーのイメージ" role="img">
+ <div class="reel-phone">
+  <div class="reel-screen">
+   {scenes.map((s,i)=><figure class="reel-scene" style={`--i:${i}`}><img src={asset(s.image)} alt="" width="600" height="800"/><figcaption><span class="reel-day">{s.day} · {s.place}</span><span class="reel-line">{s.line}</span></figcaption></figure>)}
+   <div class="reel-bars" aria-hidden="true">{scenes.map((_,i)=><span style={`--i:${i}`}><i></i></span>)}</div>
+   <div class="reel-top" aria-hidden="true"><span class="reel-avatar">f</span><span>わが家の沖縄 2026</span></div>
+   <div class="reel-grain" aria-hidden="true"></div>
+  </div>
+ </div>
+ <div class="reel-card reel-card-a" aria-hidden="true"><span class="reel-card-thumb" style={`background-image:url(${asset('/scene-sea.svg')})`}></span><div><b>本編ムービー</b><small>3:12 · 横型</small></div></div>
+ <div class="reel-card reel-card-b" aria-hidden="true"><span class="reel-card-icon">♡</span><div><b>じいじ・ばあば版</b><small>LINEで送信済み</small></div></div>
+ <p class="reel-note" aria-hidden="true">送るのは、<br/>スマホの動画だけ。</p>
+</div>

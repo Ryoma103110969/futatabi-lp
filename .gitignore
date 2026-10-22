@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.env.*
+
+# Internal notes and local tooling stay out of the public repo
+docs/
+.claude/
+.DS_Store
